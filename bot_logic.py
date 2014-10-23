@@ -1,5 +1,6 @@
 from twython import Twython
 import json
+import os
 
 def auth():
     with open("access.json", 'r') as f:
@@ -21,16 +22,17 @@ def dump(queue, info):
 
 def respond(twitter, top_tweet):
     name = top_tweet["user"]["screen_name"]
-    message = "I couldn't care less"
+    twitter.create_friendship(screen_name=name)
+    message = "You can do it, I believe in you!"
     twitter.update_status(status="@%s %s" %(name, message), in_reply_to_status_id=top_tweet["id"])
 
 
 def main():
     twitter = auth()
     queue, info = load()
-    tweets = twitter.search(q="omg fml", result_type="recent", since_id=info["sinceid"], count='100')
+    tweets = twitter.search(q="tired sad", result_type="recent", since_id=info["sinceid"], count='100')
     info["sinceid"] = tweets["search_metadata"]["max_id"]
-    triggers = ("OMG", "LOLCAT", "FML")
+    triggers = ("tired", "sad")
     to_add = [tweet for tweet in tweets["statuses"] if not tweet["retweeted"] and not tweet.has_key("retweeted_status")]
     to_add = [tweet for tweet in to_add if tweet["text"].startswith(triggers) or tweet["text"].split(" ",1)[1].startswith(triggers)]
     queue = queue + to_add
