@@ -21,15 +21,16 @@ def dump(queue, info):
 
 def respond(twitter, top_tweet):
     name = top_tweet["user"]["screen_name"]
-    twitter.update_status(status="@%s Oh, I can believe it!" %(name), in_reply_to_status_id=top_tweet["id"])
+    message = "I couldn't care less"
+    twitter.update_status(status="@%s %s" %(name, message), in_reply_to_status_id=top_tweet["id"])
 
 
 def main():
     twitter = auth()
     queue, info = load()
-    tweets = twitter.search(q="I can't believe", result_type="recent", since_id=info["sinceid"], count='100')
+    tweets = twitter.search(q="omg fml", result_type="recent", since_id=info["sinceid"], count='100')
     info["sinceid"] = tweets["search_metadata"]["max_id"]
-    triggers = ("Can't believe", "can't believe", "I can't believe")
+    triggers = ("OMG", "LOLCAT", "FML")
     to_add = [tweet for tweet in tweets["statuses"] if not tweet["retweeted"] and not tweet.has_key("retweeted_status")]
     to_add = [tweet for tweet in to_add if tweet["text"].startswith(triggers) or tweet["text"].split(" ",1)[1].startswith(triggers)]
     queue = queue + to_add
