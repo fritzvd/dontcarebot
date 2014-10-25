@@ -1,8 +1,10 @@
 from twython import Twython
 import json
 import os
+import random
 
 def auth():
+    os.chdir('/home/fritz/Development/me/dontcarebot/')
     with open("access.json", 'r') as f:
         db = json.load(f)
     return Twython(db["API_Key"], db["API_Secret"], db["Access_Token"], db["Access_Token_Secret"])
@@ -23,7 +25,9 @@ def dump(queue, info):
 def respond(twitter, top_tweet):
     name = top_tweet["user"]["screen_name"]
     twitter.create_friendship(screen_name=name)
-    message = "You can do it, I believe in you!"
+    with open("messages.json", 'r') as f:
+        messages = json.load(f)
+    message = messages[random.randint(0, len(messages) - 1)]['message']
     twitter.update_status(status="@%s %s" %(name, message), in_reply_to_status_id=top_tweet["id"])
 
 
