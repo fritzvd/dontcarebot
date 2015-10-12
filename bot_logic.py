@@ -47,7 +47,7 @@ def main():
 
     for mention in mentions:
         if not mention['favorited']:
-            twitter.create_favorite(id=mention['id'])
+            # twitter.create_favorite(id=mention['id'])
             respond(twitter, mention, reply=True)
 
     tweets = twitter.search(q="tired sad", result_type="recent",
